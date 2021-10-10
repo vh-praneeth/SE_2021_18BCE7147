@@ -48,7 +48,6 @@ class Game:
                 elif B_exists:
                     winner = 'B'
                 print(winner + ' won')
-
                 raise GameEndedException()  # end the current game
 
     def has_duplicates(self, inp):
@@ -136,7 +135,25 @@ class Game:
             elif 'B' == char:    coords[1] += dist  # col += 1
         return coords
     
-    def invalid_dir(self, dir):
+    def invalid_dir(self, dir, char, kill):
+        if char[0] == 'P' and dir != 'F':
+            return True
+        if char == 'H1' and len(kill) != 1:
+            return True
+        if char == 'H2':
+            if len(kill) != 2:
+                return True
+            if kill[0] == kill[1]:  # if 2 x same direction
+                return True
+            if kill in ['RL', 'FB']:  # opposite directions
+                return True
+        if char == 'H3':
+            if len(dir) != 3:
+                return True
+            if dir[0] == dir[2]:  # if 2 x same direction
+                return True
+            if dir[1:] in ['RL', 'FB']:
+                return True
         for char in dir:
             if char not in 'LRFB':
                 return True
@@ -147,14 +164,9 @@ class Game:
         coord = self.get_position(player + '-' + char)
         if not coord:
             return 'Entered character does not exist. Please try again'
-
         # char can move only in supported direction
-        if (self.invalid_dir(dir)) \
-                or (char[0] == 'P' and dir != 'F') \
-                or (char == 'H1' and len(kill) != 1) \
-                or (char == 'H2' and len(kill) != 2) \
-                or (char == 'H3' and len(dir) != 3):
-            return 'Invalid move for that character. Please try again. ' + str(char) + " " + str(dir) 
+        if self.invalid_dir(dir, char, kill):
+            return 'Invalid move for that character. Please try again. ' + str(char) + ' ' + str(dir) + ' ' + str(kill)
         
         new_coord = self.move(coord[:], dir, player)  # make copy of coord
         x = new_coord[0]
@@ -169,7 +181,6 @@ class Game:
         if kill:
             kill_coord = self.move(coord[:], kill, player)
             self.grid[kill_coord[1]][kill_coord[0]] = '-'  # make kill position empty
-
         # make the move
         self.grid[y][x] = player + '-' + char
         self.grid[coord[1]][coord[0]] = '-'  # make old position empty
@@ -236,15 +247,12 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             continueGame = False
         except GameEndedException:
+            continueGame = False
             try:
                 try_again = input('\nDo you want to play again? Y/N: ')
                 if 'Y' in try_again.upper():
                     continueGame = True
-                    continue
-                else:
-                    continueGame = False
             except:
-                continueGame = False
                 pass
         except Exception:
             print('Game ended')
