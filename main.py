@@ -129,10 +129,14 @@ class Game:
         else:
             dist = -1
         for char in dir:
-            if 'L' == char:  coords[0] -= dist  # row -= 1
-            elif 'R' == char:    coords[0] += dist  # row += 1
-            elif 'F' == char:    coords[1] -= dist  # col -= 1
-            elif 'B' == char:    coords[1] += dist  # col += 1
+            if 'L' == char:
+                coords[0] -= dist  # row -= 1
+            elif 'R' == char:
+                coords[0] += dist  # row += 1
+            elif 'F' == char:
+                coords[1] -= dist  # col -= 1
+            elif 'B' == char:
+                coords[1] += dist  # col += 1
         return coords
     
     def invalid_dir(self, dir, char, kill):
@@ -180,6 +184,8 @@ class Game:
         
         if kill:
             kill_coord = self.move(coord[:], kill, player)
+            if self.grid[kill_coord[1]][kill_coord[0]][0] == player:
+                return 'Targeted a character from your own team. Please try again'
             self.grid[kill_coord[1]][kill_coord[0]] = '-'  # make kill position empty
         # make the move
         self.grid[y][x] = player + '-' + char
