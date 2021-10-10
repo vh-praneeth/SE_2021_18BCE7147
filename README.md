@@ -1,8 +1,12 @@
 # SE_2021_18BCE7147
 For Software Engineer profile
 
+To test it without having to type all the input,
+use `
+python3 main.py < test.in
+`
 
-If any changes are required, send email.
+
 
 Name: Hari Praneeth Vadlapati \
 Email ID: haripraneethv@gmail.com \
