@@ -1,6 +1,14 @@
 P3, P2, H3, H2, H1
 P2, P1, P3, P5, P4
-H1:LL
 H1:F
 P2:F
-H2:FB
+H2:FL
+P2:F
+H1:F
+P2:F
+H1:L
+P1:F
+P3:F
+P1:F
+H3:FL
+exit

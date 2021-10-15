@@ -77,6 +77,11 @@ class Game:
             return True
         if not character[1].isnumeric():
             return True
+        if character[0] not in ['P', 'H']:
+            return True
+        n = int(character[1])
+        if n <= 0 or n > self.size:
+            return True
         return False
 
     def has_invalid_characters(self, inp):
@@ -85,33 +90,6 @@ class Game:
             if self.is_invalid_character(character):
                 print('Invalid character ' + character + '. Please try again')
                 return True
-
-    def take_input_positions(self, player):
-        'Take user input for character positions'
-        # keep trying until input is valid
-        while 1:
-            try:
-                inp = input('Player' + player + ' input: ')
-                # comma should be present 4 times (size-1)
-                if inp.count(', ') != self.size-1:
-                    print('Invalid input format. Please try again')
-                    continue
-                inp = inp.split(', ')
-                if len(inp) != self.size:
-                    print('Invalid number of characters. Pease try again')
-                    continue
-                if self.has_invalid_characters(inp):
-                    continue
-                if self.has_duplicates(inp):
-                    print('Same character cannot appear multiple times. Please try again')
-                    continue
-                self.add_to_grid(inp, player)
-                self.print_grid()
-                return inp
-            except KeyboardInterrupt:
-                return False
-            except Exception:
-                continue
 
     def get_position(self, character):
         'Get the position of a specified character'
@@ -192,10 +170,41 @@ class Game:
         self.grid[coord[1]][coord[0]] = '-'  # make old position empty
         return None  # no error
 
+    def take_input_positions(self, player):
+        'Take user input for character positions'
+        # keep trying until input is valid
+        while 1:
+            try:
+                inp = input('Player' + player + ' input: ')
+                if inp == 'exit':
+                    raise GameEndedException()
+                # comma should be present 4 times (size-1)
+                if inp.count(', ') != self.size-1:
+                    print('Invalid input format. Please try again')
+                    continue
+                inp = inp.split(', ')
+                if len(inp) != self.size:
+                    print('Invalid number of characters. Pease try again')
+                    continue
+                if self.has_invalid_characters(inp):
+                    continue
+                if self.has_duplicates(inp):
+                    print('Same character cannot appear multiple times. Please try again')
+                    continue
+                self.add_to_grid(inp, player)
+                self.print_grid()
+                return inp
+            except KeyboardInterrupt:
+                return False
+            except Exception:
+                continue
+    
     def take_input_move(self, player):
         'Takes a movement input from the user'
         while 1:
             inp = input('Player ' + player + '\'s move: ')  # Player A's move
+            if inp == 'exit':
+                raise GameEndedException()
             try:
                 if inp.count(':') != 1:
                     print('Invalid input format. Please try again. Check :')
