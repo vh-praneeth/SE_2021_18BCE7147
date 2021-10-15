@@ -15,4 +15,4 @@ ID number: 18BCE7147
 
 
 # Demo:
-![](https://im7.ezgif.com/tmp/ezgif-7-d8ec0fb4e27a.gif)
+![Loading demo...](demo.gif)
